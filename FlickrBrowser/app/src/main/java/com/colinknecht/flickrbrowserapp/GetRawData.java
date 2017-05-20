@@ -94,4 +94,17 @@ class GetRawData extends AsyncTask<String, Void, String> {
             Log.d(TAG, "onPostExecute: Ends");
         }
     }
+
+    void runInSameThread (String s) {
+        Log.d(TAG, "runInSameThread: method starts");
+
+//        onPostExecute(doInBackground(s));
+        if (mCallback != null) {
+//            String result = doInBackground(s);
+//            mCallback.onDownloadComplete(result, mDownloadStatus);
+            mCallback.onDownloadComplete(doInBackground(s),mDownloadStatus);
+        }
+
+        Log.d(TAG, "runInSameThread: method ends");
+    }
 }//getRawData Class
