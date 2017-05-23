@@ -1,10 +1,12 @@
 package com.colinknecht.flickrbrowserapp;
 
+import java.io.Serializable;
+
 /**
  * Created by colinknecht on 5/19/17.
  */
 
-class Photo {
+class Photo implements Serializable {
     private String mTitle;
     private String mAuthor;
     private String mAuthorId;
