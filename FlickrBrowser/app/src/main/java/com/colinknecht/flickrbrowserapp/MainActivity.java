@@ -4,16 +4,21 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable, RecyclerItemClickListener.OnRecyclerClickListener {
     private static final String TAG = "MainActivity";
+    private FlickrRecyclerViewAdapter mFlickrRecyclerViewAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: starts");
@@ -21,6 +26,14 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.appBarLayout);//toolbar?
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
+
+        mFlickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(this, new ArrayList<Photo>());
+        recyclerView.setAdapter(mFlickrRecyclerViewAdapter  );
 
 //        GetRawData getRawData = new GetRawData(this);
 //        getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1");
@@ -64,11 +77,25 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
 
     @Override
     public void OnDataAvailable(List<Photo> data, DownloadStatus status) {
+        Log.d(TAG, "OnDataAvailable: method starts");
         if (status == DownloadStatus.OK) {
-            Log.d(TAG, "OnDataAvailable: data is " + data);
+            mFlickrRecyclerViewAdapter.loadNewData(data);
         } else {
             //download or Processing Failed
             Log.e(TAG, "OnDataAvailable: failed with status " + status );
         }
+        Log.d(TAG, "OnDataAvailable: method ends");
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d(TAG, "onItemClick: method starts");
+        Toast.makeText(MainActivity.this, "Normal Tap at position " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        Log.d(TAG, "onItemLongClick: method starts");
+        Toast.makeText(MainActivity.this, "Long Tap at position " + position, Toast.LENGTH_SHORT).show();
     }
 }//MainActivity

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -34,13 +36,29 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
 
     @Override
     public void onBindViewHolder(FlickrImageViewHolder holder, int position) {
+        Photo photoItem = mPhotoList.get(position);
+        Log.d(TAG, "onBindViewHolder: " + photoItem.getTitle() + " at position ====> " + position);
+        Picasso.with(mContext).load(photoItem.getImage())
+                .error(R.drawable.placeholder)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.thumbnail);
 
+        holder.title.setText(photoItem.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: method called");
+//        Log.d(TAG, "getItemCount: method called");
         return ((mPhotoList != null) && (mPhotoList.size() != 0) ? mPhotoList.size() : 0);
+    }
+
+    void loadNewData(List<Photo> newPhotoList){
+        mPhotoList = newPhotoList;
+        notifyDataSetChanged();
+    }
+
+    public Photo getPhoto(int position) {
+        return ((mPhotoList != null) && (mPhotoList.size() != 0) ? mPhotoList.get(position) : null);
     }
 
     static class FlickrImageViewHolder extends RecyclerView.ViewHolder {
