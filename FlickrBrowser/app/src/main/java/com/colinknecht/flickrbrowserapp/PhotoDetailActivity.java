@@ -33,6 +33,7 @@ public class PhotoDetailActivity extends BaseActivity {
 //            photoTitle.setText("Title " + photo.getTitle());
 
             TextView photoTags = (TextView) findViewById(R.id.photo_tags);
+            photoTags.setText(resources.getString(R.string.photo_tags_text, photo.getTags()));
 //            photoTags.setText("Tags " + photo.getTags());
 
             TextView photoAuthor = (TextView) findViewById(R.id.photo_author);
