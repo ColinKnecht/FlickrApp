@@ -3,7 +3,9 @@ package com.colinknecht.flickrbrowserapp;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +46,8 @@ public class SearchActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit: called");
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                sharedPreferences.edit().putString(FLICKR_QUERY,query).apply();
                 mSearchView.clearFocus();
                 finish();
                 return true;
@@ -54,6 +58,15 @@ public class SearchActivity extends BaseActivity {
                 return false;
             }
         });
+
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                finish();
+                return false;
+            }
+        });
+
         Log.d(TAG, "onCreateOptionsMenu: returned " + true);
         return true;
     }
